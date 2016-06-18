@@ -9,13 +9,16 @@ import {
 	Image,
 	Text,
 	View,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions,
+  TouchableHighlight,
+  AppStateIOS,
 } from 'react-native';
 
 import NavigationBar from 'react-native-navbar';
-import JobCell from './home/JobCell';
-import JobDetail from './home/JobDetail';
-import JobList from './home/JobList';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+const window = Dimensions.get('window');
 
 class Button extends React.Component {
   handlePress(e) {
@@ -35,9 +38,7 @@ class Button extends React.Component {
   }
 }
 
-
 var renderHeader = function (index, total, context) {
-  
 	return (
 		<View style={styles.headerBody}>
 			<Image source={require('../images/icon_find_ok.png')} style={{width:52,height:50}}/>
@@ -53,25 +54,37 @@ export default class Home extends React.Component {
 	render() {
     var centerPage =
       <View style={styles.centerPage}>
-        <Text style={styles.topText}>
-          hello, this is a center page.
-        </Text>
-        <Image style={styles.centerImage}>
+        <Image style={styles.centerImage} source={require('../images/dota2.jpg')}>
+          <Text style={styles.topText}>
+            hello, this is a center page.
+          </Text>
+          <Text style={styles.bottomText}>
+            hello, this is the bottom of a center page.
+          </Text>
         </Image>
-        <Text style={styles.bottomText}>
-          hello, this is the bottom of a center page.
-        </Text>
       </View>;
 		return (
 			<View style={styles.container}>
         <NavigationBar
           style={styles.navigatorTitle}
-          statusBar={{hidden: true}}
+          statusBar={{hidden: false, tintColor: '#008CBA'}}
           tintColor="#202020"
           title={{title: 'home', tintColor: 'white'}}
-          rightButton={{title: 'Second', tintColor: '#3CABDA'}}
+          rightButton={
+            <View style={{flexDirection: 'row', top: 5,}} >
+              <TouchableHighlight onPress={() => alert(AppStateIOS.currentState)}>
+                <View style={styles.iconButton}  >
+                  <Icon name="plus" size={22}  style={{color:"white",}} />
+                </View>  
+              </TouchableHighlight>
+              <TouchableHighlight onPress={this.props.show_slider_bar}>
+                <View style={styles.iconButton} >
+                  <Icon name="navicon" size={22}  style={{color:"white",}} />
+                </View>  
+              </TouchableHighlight>  
+            </View>
+          }
         />
-        
         {centerPage}
 			</View>
 		);
@@ -80,29 +93,44 @@ export default class Home extends React.Component {
 
 var _main_color = '#008CBA';
 var styles = StyleSheet.create({
+  iconButton: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    padding: 8,
+    marginRight: 10,
+  },
   centerPage: {
     flex: 1,
+    // justifyContent: 'center',
   },
   topText: {
     paddingTop: 30,
+    color: 'white',
     fontSize: 20,
-    flex: 1,
     textAlign: 'center',
     flexWrap: 'wrap',
+    flex: 2,
+    backgroundColor: 'transparent',
   },
   centerImage: {
-    flex: 3,
+    flex: 1,
+    width: 320,
+    height: 460,
   },
   bottomText: {
     paddingTop: 30,
-    fontSize: 20,
     flex: 1,
+    fontSize: 20,
+    color: 'white',
     textAlign: 'center',
     flexWrap: 'wrap',
+    backgroundColor: 'transparent',
   },
   navigatorTitle: {
     backgroundColor: _main_color,
     flexDirection: 'row',
+    // marginTop: -20,
   },
 	headerBody: {
 		padding: 20,
@@ -112,8 +140,6 @@ var styles = StyleSheet.create({
 	},
 	container: {
 		flex: 1,
-		marginTop: 20,
-		backgroundColor: '#EEE',
-		paddingBottom: 48,
 	},
+  
 });

@@ -19,12 +19,9 @@ export default class RouteHome extends React.Component {
     return (
     <Navigator
       initialRoute={{ name: defaultName, component: defaultComponent }}
-      configureScene={(route) => {
-        return Navigator.SceneConfigs.HorizontalSwipeJump;
-      }}
       renderScene={(route, navigator) => {
         let Component = route.component;
-        return <Component {...route.params} navigator={navigator} />
+        return <Component {...route.params} navigator={navigator} show_slider_bar={this.props.show_slider_bar} />
       }} />
     );
 	}

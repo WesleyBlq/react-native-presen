@@ -12,20 +12,23 @@ import {
   View,
   Image,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native';
 import SideMenu from 'react-native-side-menu';
 
 import RouteHome from './RouteHome';
-import Message from './views/Message';
+import HomeTabMenu from './views/HomeTabMenu';
 // import Discover from './views/Discover';
 import RouteMe from './RouteMe';
 import Menu from './Menu';
 import Icon from 'react-native-vector-icons/FontAwesome';
+// import Icon from 'react-native-vector-icons/Ionicons';
 
+const window = Dimensions.get('window');
 const HOME_TAB = 'homeTab';
-const MESSAGE_TAB = 'messageTab';
-const DISCOVER_TAB = 'discoverTab';
-const ME_TAB = 'meTab';
+const MY_HOME_TAB = 'myHomeTab';
+const Routines_TAB = 'routinesTab';
+const Marketplace_TAB = 'marketplaceTab';
 
 // class Button extends React.Component {
 //   handlePress(e) {
@@ -49,7 +52,7 @@ const ME_TAB = 'meTab';
 export default class MainPage extends React.Component {
   state = {
     isOpen: false,
-    selectedItem: 'About',
+    selectedItem: HOME_TAB,
   };
 
   toggle() {
@@ -72,17 +75,16 @@ export default class MainPage extends React.Component {
   render() {
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
     const window = Dimensions.get('window');
-    let menu_offset = window.width * 0.3;
+    let menu_offset = window.width * 0.4;
     
     return (
-      <SideMenu
-        menu={menu}
-        isOpen={this.state.isOpen}
-        onChange={(isOpen) => this.updateMenuState(isOpen)}
-        openMenuOffset={menu_offset}>
-        <TabBar show_slider_bar={this.toggle} />
-        
-      </SideMenu>
+    <SideMenu
+      menu={menu}
+      isOpen={this.state.isOpen}
+      onChange={(isOpen) => this.updateMenuState(isOpen)}
+      openMenuOffset={menu_offset}>
+      <TabBar show_slider_bar={this.toggle.bind(this)} />
+    </SideMenu>
     );
   }
 };
@@ -108,9 +110,9 @@ class TabBar extends React.Component {
     }
     return <NavigatorIOS
       style={{flex:1}}
-      barTintColor='#FFF'
-      titleTextColor="#666"
-      tintColor="#666"
+      barTintColor='#008CBA'
+      titleTextColor="#ffffff"
+      tintColor="#ffffff"
       translucent={false}
       initialRoute={{
         component: component,
@@ -122,13 +124,11 @@ class TabBar extends React.Component {
       />;
   }
 
-  _renderContent(pageName: string, num?: number) {
+  _renderContent(pageName: string) {
     var renderView;
     if(pageName == HOME_TAB){
       renderView = <RouteHome  show_slider_bar={this.props.show_slider_bar} />;
-    } else if(pageName == MESSAGE_TAB){
-      renderView = <Message />
-    } else if(pageName == ME_TAB){
+    } else if(pageName == Marketplace_TAB){
       renderView = <RouteMe />
     }
 
@@ -138,67 +138,62 @@ class TabBar extends React.Component {
       </View>
     );
   }
-
+  // {this._renderContent(Marketplace_TAB)}
   render() {
     return (
       <View style={styles.container}>
         <TabBarIOS
-          tintColor="#11a984"
+          tintColor="#008CBA"
           barTintColor="#FFFFFF">
-          <TabBarIOS.Item
-            title="Dashboard"            
+          <Icon.TabBarItemIOS
+            title="Home"
+            iconName="home"
+            selectedIconName="home"
             selected={this.state.selectedTab === HOME_TAB}
             onPress={() => this.setTab(HOME_TAB)}>
             {this._renderContent(HOME_TAB)}
-          </TabBarIOS.Item>
-          <TabBarIOS.Item
+          </Icon.TabBarItemIOS>
+          <Icon.TabBarItemIOS
             title="My Home"
-            icon={require('./images/icon_message_nor.png')}
-            badge={this.state.notifCount > 0 ? this.state.notifCount : undefined}
-            selected={this.state.selectedTab === MESSAGE_TAB}
-            onPress={() => this.setTab(MESSAGE_TAB)}>
-            {this._addNavigator(Message, '消息列表')}
-          </TabBarIOS.Item>
-          <TabBarIOS.Item
+            iconName="th-large"
+            selectedIconName="th-large"
+            selected={this.state.selectedTab === MY_HOME_TAB}
+            onPress={() => this.setTab(MY_HOME_TAB)}>
+            {this._addNavigator(HomeTabMenu, 'My Home')}
+          </Icon.TabBarItemIOS>
+          <Icon.TabBarItemIOS
             title="Routines"
-            icon={require('./images/icon_user_nor.png')}
-            selected={this.state.selectedTab === ME_TAB}
-            onPress={() => this.setTab(ME_TAB)}>
-            {this._renderContent(ME_TAB)}
-          </TabBarIOS.Item>
-          <TabBarIOS.Item
-            title="Marketplace"
-            icon={require('./images/icon_user_nor.png')}
-            selected={this.state.selectedTab === ME_TAB}
-            onPress={() => this.setTab(ME_TAB)}>
-            {this._renderContent(ME_TAB)}
-          </TabBarIOS.Item>
+            iconName="bicycle"
+            selectedIconName="bicycle"
+            selected={this.state.selectedTab === Routines_TAB}
+            onPress={() => this.setTab(Routines_TAB)}>
+            {this._renderContent(Routines_TAB)}
+          </Icon.TabBarItemIOS>
+          <Icon.TabBarItemIOS
+            title="Setting"
+            iconName="gear"
+            selectedIconName="gear"
+            selected={this.state.selectedTab === Marketplace_TAB}
+            onPress={() => this.setTab(Marketplace_TAB)}>
+            {this._renderContent(Marketplace_TAB)}
+          </Icon.TabBarItemIOS>
         </TabBarIOS>
       </View>
     );
   }
 }
 
-
-
 var styles = StyleSheet.create({
   button: {
     position: 'absolute',
     top: 20,
     padding: 10,
-
   },
   container: {
     flex: 1,
   },
   pageView: {
-    flex: 1,
+    flex: 5,
   },
-  tabContent: {
-    flex: 1,
-    alignItems: 'center',
-  },
-  tabText: {
-    margin: 50,
-  }
+  
 });
